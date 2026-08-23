@@ -1284,7 +1284,22 @@ static void mutt_set_encoding(BODY *b, CONTENT *info)
 
 void mutt_stamp_attachment(BODY *a)
 {
-  a->stamp = time(NULL);
+  struct stat sb;
+
+  if (a->filename && stat(a->filename, &sb) == 0)
+    a->stamp = sb.st_mtime;
+  else
+  {
+    /* Error handling, such as the attachment disappearing, will be
+     * done later, before sending.  However, callers still expect the
+     * stamp to be set to something reasonable after this function
+     * returns.
+     *
+     * We use "time() + 1" because of the Linux filesystem clock
+     * granularity changes that led to this function using stat().
+     */
+    a->stamp = time(NULL) + 1;
+  }
 }
 
 /* Get a body's character set */
