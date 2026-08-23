@@ -1329,7 +1329,7 @@ static int autoview_handler(BODY *a, STATE *s)
 
   fname = safe_strdup(a->filename);
   mutt_sanitize_filename(fname, MUTT_SANITIZE_ALLOW_8BIT);
-  mutt_rfc1524_expand_filename(entry->nametemplate, fname, tempfile);
+  mutt_rfc1524_expand_tmpdir_filename(entry->nametemplate, fname, tempfile);
   FREE(&fname);
 
   if (entry->command)
