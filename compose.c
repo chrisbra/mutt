@@ -1575,16 +1575,20 @@ int mutt_compose_menu(SEND_CONTEXT *sctx)
         CHECK_COUNT;
         if (menu->tagprefix)
         {
-          BODY *top;
-          for (top = msg->content; top; top = top->next)
+          for (i = 0; i < actx->idxlen; i++)
           {
-            if (top->tagged)
-              mutt_get_tmp_attachment(top);
+            if (!actx->idx[i]->content->tagged)
+              continue;
+            if (mutt_get_tmp_attachment(actx->idx[i]->content) == 0)
+              actx->idx[i]->unowned = 0;
           }
           menu->redraw = REDRAW_FULL;
         }
         else if (mutt_get_tmp_attachment(CURATTACH->content) == 0)
+        {
+          CURATTACH->unowned = 0;
           menu->redraw = REDRAW_CURRENT;
+        }
 
         /* No send2hook since this doesn't change the message. */
         break;

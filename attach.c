@@ -59,7 +59,8 @@ int mutt_get_tmp_attachment(BODY *a)
 
   snprintf(type, sizeof(type), "%s/%s", TYPE(a), a->subtype);
   rfc1524_mailcap_lookup(a, type, sizeof(type), entry, 0);
-  mutt_rfc1524_expand_filename(entry->nametemplate, a->filename, tempfile);
+  /* <get-attachment> in the compose menu should save the file inside $tmpdraftdir */
+  mutt_rfc1524_expand_tmpdraftdir_filename(entry->nametemplate, a->filename, tempfile);
 
   rfc1524_free_entry(&entry);
 
@@ -112,8 +113,8 @@ int mutt_compose_attachment(BODY *a)
       else
         mutt_buffer_strcpy(command, entry->composecommand);
 
-      mutt_rfc1524_expand_filename(entry->nametemplate,
-                                   a->filename, newfile);
+      mutt_rfc1524_expand_tmpdir_filename(entry->nametemplate, a->filename,
+                                          newfile);
       muttdbg(1, "oldfile: %s\t newfile: %s", a->filename, mutt_b2s(newfile));
 
       if (safe_symlink(a->filename, mutt_b2s(newfile)) == -1)
@@ -244,8 +245,8 @@ int mutt_edit_attachment(BODY *a)
     {
 
       mutt_buffer_strcpy(command, entry->editcommand);
-      mutt_rfc1524_expand_filename(entry->nametemplate,
-                                   a->filename, newfile);
+      mutt_rfc1524_expand_tmpdir_filename(entry->nametemplate, a->filename,
+                                          newfile);
       muttdbg(1, "oldfile: %s\t newfile: %s", a->filename, mutt_b2s(newfile));
 
       if (safe_symlink(a->filename, mutt_b2s(newfile)) == -1)
@@ -403,8 +404,7 @@ int mutt_view_attachment(FILE *fp, BODY *a, int flag, HEADER *hdr,
     mutt_sanitize_filename(fname,
                            (fp ? 0 : MUTT_SANITIZE_ALLOW_SLASH) |
                            MUTT_SANITIZE_ALLOW_8BIT);
-    mutt_rfc1524_expand_filename(entry->nametemplate, fname,
-                                 tempfile);
+    mutt_rfc1524_expand_tmpdir_filename(entry->nametemplate, fname, tempfile);
     FREE(&fname);
 
     if (mutt_save_attachment(fp, a, mutt_b2s(tempfile), 0, NULL, 0) == -1)
@@ -978,8 +978,8 @@ int mutt_print_attachment(FILE *fp, BODY *a)
     mutt_sanitize_filename(sanitized_fname,
                            (fp ? 0 : MUTT_SANITIZE_ALLOW_SLASH) |
                            MUTT_SANITIZE_ALLOW_8BIT);
-    mutt_rfc1524_expand_filename(entry->nametemplate, sanitized_fname,
-                                 newfile);
+    mutt_rfc1524_expand_tmpdir_filename(entry->nametemplate, sanitized_fname,
+                                        newfile);
     FREE(&sanitized_fname);
 
     if (mutt_save_attachment(fp, a, mutt_b2s(newfile), 0, NULL, 0) == -1)
