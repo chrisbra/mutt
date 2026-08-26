@@ -1360,8 +1360,8 @@ new message.
 <row><entry>g</entry><entry><literal>&lt;group-reply&gt;</literal></entry><entry>reply to all recipients</entry></row>
 <row><entry></entry><entry><literal>&lt;group-chat-reply&gt;</literal></entry><entry>reply to all recipients preserving To/Cc</entry></row>
 <row><entry>L</entry><entry><literal>&lt;list-reply&gt;</literal></entry><entry>reply to mailing list address</entry></row>
-<row><entry>f</entry><entry><literal>&lt;forward&gt;</literal></entry><entry>forward message</entry></row>
-<row><entry>b</entry><entry><literal>&lt;bounce&gt;</literal></entry><entry>bounce (remail) message</entry></row>
+<row><entry>f</entry><entry><literal>&lt;forward-message&gt;</literal></entry><entry>forward message</entry></row>
+<row><entry>b</entry><entry><literal>&lt;bounce-message&gt;</literal></entry><entry>bounce (remail) message</entry></row>
 <row><entry>Esc k</entry><entry><literal>&lt;mail-key&gt;</literal></entry><entry>mail a PGP public key to someone</entry></row>
 </tbody>
 </tgroup>
@@ -1948,8 +1948,8 @@ to alternative addresses as if they were the message's original
 recipients specified in the Bcc header.  Forwarding a message, on the
 other hand, allows you to modify the message before it is resent (for
 example, by adding your own comments). Bouncing is done using the
-<literal>&lt;bounce&gt;</literal> function and forwarding using the
-<literal>&lt;forward&gt;</literal> function bound to <quote>b</quote>
+<literal>&lt;bounce-message&gt;</literal> function and forwarding using the
+<literal>&lt;forward-message&gt;</literal> function bound to <quote>b</quote>
 and <quote>f</quote> respectively.
 </para>
 
@@ -8199,7 +8199,7 @@ attachments as text, or view them using the mailcap viewer definition
 Finally, you can apply the usual message-related functions (like <link
 linkend="resend-message"><literal>&lt;resend-message&gt;</literal></link>,
 and the <literal>&lt;reply&gt;</literal> and
-<literal>&lt;forward&gt;</literal> functions) to attachments of type
+<literal>&lt;forward-message&gt;</literal> functions) to attachments of type
 <literal>message/rfc822</literal>.
 </para>
 
