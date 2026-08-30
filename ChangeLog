@@ -1,3 +1,140 @@
+2026-08-30 10:46:17 +0800  Kevin J. McCarthy  <kevin@8t8.us> (bd1a8ef8)
+
+        * Update UPDATING file for 2.4.2 release.
+
+M	UPDATING
+
+2026-08-26 13:53:38 +0800  Kevin J. McCarthy  <kevin@8t8.us> (190ee83d)
+
+        * Fix minor manual errors.
+        
+        A few places referred to nonexistent functions <forward> and <bounce>,
+        which should actually be <forward-message> and <bounce-message>.
+
+M	doc/manual.xml.head
+
+2026-08-25 15:07:59 +0800  Kevin J. McCarthy  <kevin@8t8.us> (97e7e5f3)
+
+        * Fix <get-attachment> to remove attachments upon compose abort.
+        
+        The files are copied to $tmpdraftdir, and are "owned" by the compose
+        process.  But they still had their unowned flag set.  So aborting the
+        compose would leave those files inside $tmpdraftdir.
+        
+        Unset the flag so they are properly cleaned up.
+        
+        Thanks to Alejandro Colomar for the loop cleanup suggestion!
+
+M	compose.c
+
+2026-08-23 21:09:47 +0800  Kevin J. McCarthy  <kevin@8t8.us> (0df49f39)
+
+        * Fix <get-attachment> to use $tmpdraftdir.
+        
+        I missed converting it before because it was hidden inside a shared
+        function, mutt_rfc1524_expand_filename().  Most of those callers use
+        the file for an actual $tmpdir file, but <get-attachment> should put
+        it in the compose $tmpdraftdir like other attachments.
+        
+        Create two separate functions, mutt_rfc1524_expand_tmpdir_filename()
+        and mutt_rfc1524_expand_tmpdraftdir_filename().  Change
+        mutt_get_tmp_attachment() to call the latter.
+
+M	attach.c
+M	handler.c
+M	rfc1524.c
+M	rfc1524.h
+
+2026-08-20 10:42:05 +0800  Kevin J. McCarthy  <kevin@8t8.us> (9196c96e)
+
+        * Change attachment stamping to use stat st_mtime by default.
+        
+        Linux offers multiple clocks of different granularity.  In the past,
+        the seconds returned by time() and the filesystem mtime returned by
+        stat() agreed on seconds.
+        
+        With newer kernels, a mix of course and fine-grained clocks have been
+        introduced in the filesystem.  As implemented, after each change of
+        seconds, there is now a window of a few milliseconds where the coarse
+        clock's seconds (returned by time()) may lag behind the fine ones used
+        for time-stamping files.
+        
+        The change has led to a bug in Mutt, where recording the stamp of an
+        attachment using time() sometimes has a "second" value earlier than
+        the stat() st_mtime of the file just modified.
+        
+        This caused a sporadic false warning before sending an email, warning
+        that the attachment has changed on disk since it was last checked.
+        For more details, see:
+        https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1144613
+        
+        The attachment->stamp is only used to compare against the stat
+        st_mtime of the file just before sending.  So it actually makes more
+        sense to record the previous st_mtime of the file.  This occurs during
+        message composition, so an extra stat on a file that was just read is
+        not likely to cause a meaningful slow down.
+        
+        Change mutt_stamp_attachment() to use st_mtime for the stamp.  Since
+        the function previously had no error case, use "time(NULL) + 1" as a
+        fallback behavior in case stat fails or (for some strange reason) it's
+        called for a receive-mode attachment.
+        
+        Thanks to Vincent Lefèvre for reporting the issue and working on
+        finding out the source of the bug.  Thanks also to the other
+        contributors in the thread who helped with reproducing and diagnosing
+        the problem: Ian Collier, Reed Underwood, and Steffen Nurpmeso.
+        
+        Also, thanks to Oswald Buddenhagen for helping with patch review and
+        for suggestions to make this commit message better.
+
+M	sendlib.c
+
+2026-08-09 14:35:28 +0800  Kevin J. McCarthy  <kevin@8t8.us> (55fed13f)
+
+        * Fix OpenBSD build on sr.ht.
+        
+        Rename automake-1.18 to automake-1.18.1.
+
+M	.builds/openbsd.yml
+
+2026-08-09 14:28:42 +0800  Kevin J. McCarthy  <kevin@8t8.us> (d74acef9)
+
+        * Fix Arch build on sr.ht:
+        
+        The tcc-libs-static package no longer exists, and apparently isn't
+        required to build.
+
+M	.builds/archlinux.yml
+
+2026-07-11 12:03:52 -0400  Nikolas Nyby  <nikolas@gnu.org> (aad2dde2)
+
+        * Fix minor typo in UPDATING file
+        
+        teriminal -> terminal
+
+M	UPDATING
+
+2026-07-06 10:26:08 +0800  Kevin J. McCarthy  <kevin@8t8.us> (4fc103f0)
+
+        * Set GPGME key flags when getting candidates.
+        
+        Back in b5dc76dc I added the missing set calls to PGP, but didn't do
+        it for S/MIME.  At that time I wasn't sure if the flags had any effect
+        and was being cautious.
+        
+        In hindsight, it's not as if setting those flags would cause any harm
+        - either GPGME is setting them or not.  So add the corresponding flag
+        setting to the S/MIME path too.
+
+M	crypt-gpgme.c
+
+2026-07-04 13:38:36 +0800  Kevin J. McCarthy  <kevin@8t8.us> (b28388b3)
+
+        * automatic post-release commit for mutt-2.4.1
+
+M	ChangeLog
+M	VERSION
+
 2026-07-04 13:34:06 +0800  Kevin J. McCarthy  <kevin@8t8.us> (8ed69a5b)
 
         * Update UPDATING file for 2.4.1 release.
