@@ -478,6 +478,10 @@ AC_ARG_WITH(bundled-regex,
         [mutt_cv_regex=${withval}],
         [AC_CHECK_FUNCS(regcomp, mutt_cv_regex=no, mutt_cv_regex=yes)])
 
+if test "$with_bundled_regex" = yes; then
+        AC_MSG_WARN([--with-bundled-regex is deprecated and will be removed in mutt 2.6.0])
+fi
+
 if test $mutt_cv_regex = no ; then
 AC_CACHE_CHECK([whether your system's regexp library is completely broken],
         [mutt_cv_regex_broken],
@@ -502,6 +506,12 @@ int main(void) {
                 echo "Using the included GNU regex instead." >&AS_MESSAGE_FD
                 mutt_cv_regex=yes
         fi
+fi
+
+if test "$with_bundled_regex" != yes && test "$mutt_cv_regex" = "yes"; then
+        AC_MSG_WARN([The bundled GNU regex is deprecated and will be removed in mutt 2.6.0])
+        AC_MSG_WARN([Your system will not work with mutt starting in version 2.6.0])
+        AC_MSG_WARN([Please contact the developers and report this issue.])
 fi
 
 if test $mutt_cv_regex = yes; then
