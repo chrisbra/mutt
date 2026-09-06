@@ -53,7 +53,7 @@ static char *EditorHelp1 = N_("\
 static char *EditorHelp2 = N_("\
 ~q              write file and quit editor\n\
 ~r file         read a file into the editor\n\
-~t users        add users to the To: field\n\
+~t users        add addresses to the To: field\n\
 ~u              recall the previous line\n\
 ~v              edit message with the $visual editor\n\
 ~w file         write message to file\n\
@@ -435,7 +435,7 @@ int mutt_builtin_editor(SEND_CONTEXT *sctx)
           mutt_str_replace(&msg->env->subject, p);
           break;
         case 't':
-          msg->env->to = rfc822_parse_adrlist(msg->env->to, p);
+          msg->env->to = mutt_parse_adrlist(msg->env->to, p);
           msg->env->to = mutt_expand_aliases(msg->env->to);
           break;
         case 'u':
