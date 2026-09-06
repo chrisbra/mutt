@@ -1851,7 +1851,7 @@ struct option_t MuttVars[] = {
   ** The name of the user whose mail you intend to access on the IMAP
   ** server.
   ** .pp
-  ** This variable defaults to your user name on the local machine.
+  ** This variable defaults to your username on the local machine.
   */
 #endif
   { "implicit_autoview", DT_BOOL,R_NONE, {.l=OPTIMPLICITAUTOVIEW}, {.l=0} },
@@ -3021,7 +3021,7 @@ struct option_t MuttVars[] = {
   ** .pp
   ** Your login name on the POP server.
   ** .pp
-  ** This variable defaults to your user name on the local machine.
+  ** This variable defaults to your username on the local machine.
   */
 #endif /* USE_POP */
   { "post_indent_string",DT_STR, R_NONE, {.p=&PostIndentString}, {.p=0} },

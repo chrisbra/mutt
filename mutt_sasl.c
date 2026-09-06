@@ -263,7 +263,7 @@ int mutt_sasl_client_new(CONNECTION *conn, sasl_conn_t **saslconn)
     muttdbg(2, "External authentication name: %s", conn->account.user);
     if (sasl_setprop(*saslconn, SASL_AUTH_EXTERNAL, conn->account.user) != SASL_OK)
     {
-      mutt_error(_("Error setting SASL external user name"));
+      mutt_error(_("Error setting SASL external username"));
       sasl_dispose(saslconn);
       return -1;
     }

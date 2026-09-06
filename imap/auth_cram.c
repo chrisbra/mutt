@@ -81,12 +81,12 @@ imap_auth_res_t imap_auth_cram_md5(IMAP_DATA *idata, const char *method)
   muttdbg(2, "CRAM challenge: %s", obuf);
 
   /* The client makes note of the data and then responds with a string
-   * consisting of the user name, a space, and a 'digest'. The latter is
+   * consisting of the username, a space, and a 'digest'. The latter is
    * computed by applying the keyed MD5 algorithm from [KEYED-MD5] where the
    * key is a shared secret and the digested text is the timestamp (including
    * angle-brackets).
    *
-   * Note: The user name shouldn't be quoted. Since the digest can't contain
+   * Note: The username shouldn't be quoted. Since the digest can't contain
    *   spaces, there is no ambiguity. Some servers get this wrong, we'll work
    *   around them when the bug report comes in. Until then, we'll remain
    *   blissfully RFC-compliant.
